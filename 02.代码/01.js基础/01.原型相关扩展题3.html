@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // 结果是"helloundefined"
+      // 包装类:Number,String,Boolean
+      // 基本数据类型:number,string,boolean
+      // 如果给基本数据类型添加/读取属性,js就会自动创建一个对应的包装类对象
+      //            这个临时创建的包装类对象,在这行代码执行结束之后就会立即销毁
+      var str = "hello";
+
+      // 会有一个看不见的new String
+      str.title = "world";
+
+      // String.prototype.title = "999";
+      
+      console.log(str + str.title)
+
+      // var num = 123;
+      // num.count = 4;
+      // console.log(num + num.count)
+
+    </script>
+  </body>
+</html>

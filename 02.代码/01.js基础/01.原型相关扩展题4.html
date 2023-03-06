@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      /*
+        需求:现在具有一个变量data,需要知道它内部数据的数据类型
+        答案:
+          1.typeof
+            语法: typeof data
+            返回值的数据类型:string
+            返回值:"number","string","boolean","undefined",
+                    "object","symbol","bigint",'function'
+
+            优点:
+              1.可以方便,快速的分辨数据的类型
+
+            缺点:
+              1.会将null错误识别为object数据类型
+                扩展点:因为在js中,数据存在内存中,都是二进制存储
+                    如果开头是000,就会被识别为对象
+
+              2.无法精确分辨对象数据类型
+                除了function以外,都不认识
+
+
+          2.instanceof
+            语法: A instanceof B
+            返回值数据类型:布尔值
+            返回值:true||false
+              true代表A是B类型的
+              false代表A不是B类型
+
+            优点:
+              1.判断数据类型非常精准,不会出错
+
+            缺点:
+              1.他只能分辨A是不是B类型,没办法分辨A是什么类型
+
+          3.Object.getPrototypeOf
+            Object.prototype.toString
+      
+      */
+
+      // var data = [1,2,3]; 
+      var data = new Date(); 
+      // console.log(data instanceof Array)
+      // console.log(data.toString());
+      // console.log(Object.prototype.toString.call(data).split(" ")[1].replace(']',''))
+      // console.log(Object.getPrototypeOf(data).constructor.name)
+    </script>
+  </body>
+</html>

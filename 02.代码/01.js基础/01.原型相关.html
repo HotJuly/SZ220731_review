@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
+  </head>
+  <body>
     <script>
-
-        /*
+      /*
             构造函数
                 构造函数本质就是一个函数
                 构造函数的目的就是通过调用该函数,可以得到对应的实例对象
@@ -19,22 +18,35 @@
                 区分一个函数是否是构造函数的关键点:
                     1.通过他的调用方式可以得到是否是构造函数
                     2.只通过函数声明,是无法判断一个函数是不是构造函数的
+
+            回调函数
+                回调函数本质就是一个函数
+                1.我声明的
+                2.我没调用
+                3.他执行了
+
+                例如:setTimeout(()=>{},3000)
+
+            区分清楚执行函数和执行函数定义
+                执行函数定义,其实就是平常说的函数声明,效果就是在堆内存中创建这个函数对象
+                执行函数,调用函数内部函数体中的代码
+
         */
 
-       /*
+      /*
         js内存结构
             内存一共分为2个区域
                 栈内存
                     只能存放基本数据类型,地址值,标识
 
                 堆内存
-                    可以存放对象数据类型,基本数据类型
+                    可以存放对象数据类型,基本数据类型(必须通过属性进行存储)
        
                 注意:函数名和变量统称为标识
        
        */
 
-       /*
+      /*
         原型相关
             1.原型是什么?
                 -每个构造函数都具有显式原型属性(prototype)
@@ -50,39 +62,93 @@
                 总结:两个属性,一个对象
 
             2.为什么要使用原型?(使用原型的好处)
+                如果对象需要使用一个属性,但是自身没有,那么就会顺着__proto__属性向上找到自己的原型对象,
+                访问原型对象的同名属性
+
+                最终目的:将多个实例对象相同的属性/方法,存放在原型对象上,那么这些内容所有的实例对象都可以享受到
+
             3.怎么使用原型?
+                如果希望让所有的实例对象,都能使用同一个方法,那么我会将该方法存放在原型对象上
+
+                如果是要新增方法,最好在new实例对象之前新增结束
+
+                如果是设置属性,是不会走原型链的
+
             4.在哪用过原型?
-       
+              Vue.prototype.$bus = new Vue();
+              this.$bus.$on(.....)
        
        */
-        // function Person(){
-        //     console.log(this);
-        // }
+      // function Person(){
+      //     console.log(this);
+      // }
 
-        // function person(){
-        //     console.log(this);
-        // }
+      // function person(){
+      //     console.log(this);
+      // }
 
-        // var p1 = Person();
-        // var p2 = new person();
-        // console.log('p1',p1)
-        // console.log('p2',p2)
+      // var p1 = Person();
+      // var p2 = new person();
+      // console.log('p1',p1)
+      // console.log('p2',p2)
 
-//---------------------------------------------
-        function Person(name){
-            this.name = name;
-        }
+      //---------------------------------------------
+      // function Person(name){
+      //     this.name = name;
+      // }
 
-        var p1 = new Person("xiaoming");
-        console.log(p1)
+      // var p1 = new Person("xiaoming");
+      // console.log(p1)
 
-        var obj = {
+      // var obj = {
 
-        }
-        var obj2 = {
-            a:obj
-        }
+      // }
+      // var obj2 = {
+      //     a:obj
+      // }
 
+      //---------------------------------------------
+
+      //   function Person(name) {
+      //     this.name = name;
+      //     // this.eat = function(){
+      //     //     console.log('eat')
+      //     // }
+      //   }
+
+      //   Person.prototype.eat = function () {
+      //     console.log("eat");
+      //   };
+
+      //   var p1 = new Person("xiaoming");
+      //   var p2 = new Person("xiaohong");
+
+      //   console.log(p1.eat === p2.eat);
+      //   console.log(p2.eat)
+      //---------------------------------------------
+
+      /*
+        new关键字做了什么:
+            1.同步执行函数内部的函数体代码
+            2.自动声明形参,并将传入的实参数据交给形参存储
+            3.自动创建this,并往内部存入全新的实例对象
+            4.会将实例对象的__proto__属性,修改为当前构造函数的prototype
+            5.自动return实例对象
+    
+    */
+
+      function person(name) {
+        var that = new Object();
+        that.__proto__ = person.prototype;
+
+        that.name = name;
+
+        return that;
+      }
+
+      var p1 = person("xiaoming");
+
+      console.log(p1);
     </script>
-</body>
+  </body>
 </html>
