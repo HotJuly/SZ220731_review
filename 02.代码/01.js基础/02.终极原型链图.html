@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+    /*
+        语法糖:
+            1.{}    =>  new Object
+            2.[]    =>  new Array
+            3.function a(){} => new Function
+        
+
+        终极原型链:
+            1.万物皆对象,除了基本数据类型之外
+
+            2.所有的对象都是Object的实例对象
+                Object构造函数是所有对象的祖先
+
+            3.所有的函数都是Function的实例对象
+                Function构造函数是所有函数的祖先(包括他自己???)
+
+                整个js中,能创建函数的只有Function
+
+            4.在js中,函数是一等公民,它既是函数,又是对象,所以函数又称为函数对象
+                Object.prototype Object.__proto__
+
+
+        在js中,使用c语言创建的东西:
+            1.Object
+            2.Function
+            3.Function.prototype
+
+        在终极原型链图中,作者故意加上的四条线:
+            1.Function.__proto__ === Function.prototype
+                为什么要有这条线?
+                    如果没有这条线,那么Function就无法证明自己是函数这点
+                        身份证明
+
+                    如果没有这条线,那么Function就无法使用所有函数都能用的方法
+                        例如call,apply,bind等
+
+            2.Object.__proto__ === Function.prototype
+                同上
+
+            3.Object.prototype.__proto__ === null
+                如果没有这条线,那么Object的原型对象的__proto__属性应该指向自己
+                    那么原型链就会进入死循环
+
+            4.Function.prototype.__proto__ === Object.prototype
+                如果没有这条线,那么js的原型链就会出现两个顶点,而且所有函数都无法使用对象的方法
+                    也就是说函数不再是对象了
+
+
+        问题:什么是伪数组?
+        回答:
+            1.必须使用下标存储数据
+            2.必须拥有length属性
+            3.不能使用数组的方法
+                说明:伪数组的原型链上没有出现过Array的原型对象
+
+    */
+      function Foo() {}
+      const f1 = new Foo();
+
+      const o1 = new Object();
+
+      //   Foo instanceof Object;           true
+      //   Foo instanceof Function;         true
+      //   Object instanceof Object;        true
+      //   Function instanceof Function;    true
+      //   Function instanceof Object;      true
+
+      //   Object instanceof Foo;           false
+      //   f1 instanceof Function;          false
+      //   f1 instanceof Object;            true
+    </script>
+  </body>
+</html>
