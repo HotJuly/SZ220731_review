@@ -73,6 +73,17 @@
 
                 注意:全局作用域一定是最大的作用域,但是函数作用域和块级作用域的范围看写法决定
 
+
+            4.形参默认值
+                1.如果一个函数使用了形参默认值,那么此时该函数内部就会出现俩个作用域
+                    1.收集形参的函数作用域
+                    2.包裹函数体代码的块级作用域
+
+                2.如果函数作用域和块级作用域中,具有同名变量的话,
+                    那么函数作用域的该变量就会把值复制一份给块级作用域中的同名变量
+                    注意:他们仅仅是共享初始值,后续的修改互不影响
+
+
         */
 
       // function wrap(){
@@ -154,40 +165,143 @@
       //   console.log(a);
 
       //-------------------------------
-      var a = 1;
-      let obj = {
-        a: 2,
-        fn: function () {
-          console.log(a);
-        },
-      };
-      obj.fn();
+      //   var a = 1;
+      //   let obj = {
+      //     a: 2,
+      //     fn: function () {
+      //       console.log(a);
+      //     },
+      //   };
+      //   obj.fn();
 
-    //   function wrap(){
-    //     var a = 1;
-    //     let b = 2;
-    //     console.log(b)
-    //     console.log(a)
-    //   }
-    //   wrap();
+      //   function wrap(){
+      //     var a = 1;
+      //     let b = 2;
+      //     console.log(b)
+      //     console.log(a)
+      //   }
+      //   wrap();
 
-    //   if(true){
-    //     var b = 2;
-    //     let a = 1;
-    //   }
-    //   console.log(b)
-    //   console.log(a)
+      //   if(true){
+      //     var b = 2;
+      //     let a = 1;
+      //   }
+      //   console.log(b)
+      //   console.log(a)
 
-    //-------------------------------
-    // function wrap(){
-    //     var obj = {
-    //         name:"xiaoming"
+      //-------------------------------
+      // function wrap(){
+      //     var obj = {
+      //         name:"xiaoming"
+      //     }
+      //     return obj;
+      // }
+
+      // var obj2 = wrap();
+      // console.log(obj2);
+
+      //-----------------------------------
+      // 形参也是变量,只不过形参不需要开发者声明,函数会自动声明
+      // 形参的初始值来源于,开发者调用函数时候,传入的形参
+      // 形参的值可以后期进行修改
+      // function fn(x,y){
+      //     var a = 1;
+      //     var b = 2;
+      //     // y = 6;
+      //     console.log(a,b,x,y)
+      // }
+      // fn(3,4)
+
+      //--------------------------------------
+
+      // function fn(x,y=7){
+      //     var a = 1;
+      //     var b = 2;
+      //     var y ;
+      //     y = 8;
+      //     console.log(a,b,x,y)
+      // }
+      // fn(3)
+
+      //-----------------------------------------------------
+      //   var x = 1;
+
+      //   function wrap(
+      //     x,
+      //     y = function () {
+      //       x = 3;
+      //       console.log('two',x);
+      //     }
+      //   ) {
+      //     console.log('one',x);
+      //     var x = 2;
+      //     y();
+      //     console.log('three',x);
+      //   }
+
+      //   wrap();
+      //   console.log('four',x);
+
+      //--------------------------------------------------------
+
+      //   var x = 1;
+
+      //   function wrap(
+      //     x,
+      //     y = function () {
+      //       x = 3;
+      //       console.log('two',x);
+      //     }
+      //   ) {
+      //     console.log('one',x);
+      //     // var x = 2;
+      //     y();
+      //     console.log('three',x);
+      //   }
+
+      //   wrap();
+      //   console.log('four',x);
+
+      //------------------------------------------
+
+    //   var x = 1;
+
+    //   function wrap(
+    //     xx,
+    //     y = function () {
+    //       x = 3;
+    //       console.log("two", x);
     //     }
-    //     return obj;
-    // }
+    //   ) {
+    //     console.log("one", x);
+    //     var x = 2;
+    //     y();
+    //     console.log("three", x);
+    //   }
 
-    // var obj2 = wrap();
-    // console.log(obj2);
+    //   wrap();
+    //   console.log("four", x);
+
+      //------------------------------------
+      
+
+      var x = 1;
+
+      function wrap(
+        x = 4,
+        y = function () {
+          x = 3;
+          console.log("two", x);
+        }
+      ) {
+        console.log("one", x);
+        var x = 2;
+        y();
+        console.log("three", x);
+      }
+
+      wrap();
+      console.log("four", x);
     </script>
   </body>
 </html>
