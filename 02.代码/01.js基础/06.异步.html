@@ -7,32 +7,111 @@
 </head>
 <body>
   <script>
-    [1, 2, 3].forEach(item => {
-      console.log(item)
-    })
-    console.log('a forEach()之后')
+    /*
+      异步(懒)
+        现在有一件事情,我放到未来去做
+        将一个函数/一段代码,延迟一段时间执行
 
-    new Promise((resolve, reject) => { // excutor  执行器函数
-      console.log('b 执行excutor')
-    })
+      问题:什么是回调函数?
+        1.我创建的
+        2.我没调用
+        3.他执行了
 
-    console.log('c new Promise()之后')
+      问题:请问回调函数一定是异步执行吗?
+      回答:不一定,其实存在一些回调函数是同步执行的
+        例如:数组的回调函数都是同步执行的,Promise的执行器函数也是同步执行的
 
+      异步任务
+        只有主线程代码全部执行结束之后,才会执行异步任务
+
+        一共分为两种
+          1.宏任务
+          2.微任务
+
+          用于存储多个宏任务的称为宏任务队列
+          用于存储多个微任务的称为微任务队列
+
+          栈结构
+            先进后出,后进先出
+
+          队列结构
+            先进先出,后进后出
+
+          宏任务:
+            1.定时器
+            2.请求相关
+            3.事件相关
+
+          微任务:
+            1.then方法
+            2.mutationObserver方法
+
+          以上说的这些,都只是开启宏任务/微任务的手段,他们本身都是同步执行的
+            他会将回调函数延迟一段时间,异步执行
+
+
+        代码的执行顺序:
+          1.首先执行主线程代码
+          2.清空微任务队列
+          3.执行宏任务
+
+          注意:微任务队列是清空,但是宏任务队列不是清空,是每执行完一个宏任务就会查看微任务队列
+
+        问题:请问js中,是宏任务优先还是微任务优先?
+        回答:
+            1.如果将script标签中的代码,当作第一个宏任务看待,那么就是宏任务优先
+            2.如果不将script标签中的代码,当作是第一个宏任务,那么就是微任务优先
+    
+    */
+    // [1, 2, 3].forEach(item => {
+    //   console.log(item)
+    // })
+    // console.log('a forEach()之后')
+
+    // new Promise((resolve, reject) => { // excutor  执行器函数
+    //   console.log('b 执行excutor')
+    // })
+
+    // console.log('c new Promise()之后')
+
+    // setTimeout(() => {
+    //   console.log('d 执行timout回调')
+    // }, 0);
+
+    // console.log('e setTimeout()之后')
+
+    // Promise.resolve(1).then(() => {
+    //   console.log('f promise成功的回调')
+    // })
+
+    // Promise.resolve(1).then(() => {
+    //   console.log('g promise成功的回调')
+    // })
+
+    // console.log('h .then之后')
+
+    //------------------------------
+    
     setTimeout(() => {
-      console.log('d 执行timout回调')
+      console.log('1')
+
+      Promise.resolve(1).then(() => {
+        console.log('2')
+      })
+
+      Promise.resolve(1).then(() => {
+        console.log('3')
+      })
+
+    }, 0);
+    
+    setTimeout(() => {
+      console.log('4')
     }, 0);
 
-    console.log('e setTimeout()之后')
-
     Promise.resolve(1).then(() => {
-      console.log('f promise成功的回调')
+      console.log('5')
     })
-
-    Promise.resolve(1).then(() => {
-      console.log('g promise成功的回调')
-    })
-
-    console.log('h .then之后')
 
     
   </script>
