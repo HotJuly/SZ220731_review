@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var length = 6;
+        var obj = {
+            length:7,
+            fn:function(){
+                return this.length
+            }
+        };
+
+        (function(){
+            var length = 8;
+
+            // arguments他会接收当前函数的所有实参,组成伪数组
+            console.log(arguments[0]())
+        })(obj.fn,1,2,3);
+        
+        // obj.fn();
+
+        
+        // (function(){
+        //     var length = 8;
+
+        //  arguments他会接收当前函数的所有实参,组成伪数组
+        // arguments是一个对象,他用0,1,2存储数据,具有length属性
+        // 读取对象属性值的语法:obj.fn  obj['fn']
+        //     console.log(arguments[0]())
+        //     console.log(arguments.0())
+
+        //     console.log(0X001())->错误理解
+        // })(0X001);
+
+        // function fn(){
+        //     console.log(this)
+        // }
+
+        // var obj = {
+        //     fn:fn
+        // }
+        // fn();
+        // obj.fn();
+
+        // var callbacks = [fn];
+        // callbacks[0]();
+        // callbacks.0();
+        
+    </script>
+</body>
+</html>
