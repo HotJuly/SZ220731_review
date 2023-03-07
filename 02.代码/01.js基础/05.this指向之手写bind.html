@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      /*
+            前言:
+                fn.call(obj)
+                    fn->被借调函数
+                    call->借调函数
+                    obj->强行改变的this指向
+
+            面试题:请说说对call和bind的了解
+            回答:
+                相同点:
+                  1.他们都可以通过第一个实参,来强行改变被借调函数的this指向
+
+                  2.他们都会将第二个实参开始的数据,全部传给被借调函数使用
+
+                  3.他们接收参数个数都是0个->无数个
+
+                  4.如果不传入第一个实参(null或者undefined),
+                    那么被借调函数的this指向会被强行改为window对象
+
+                不同点:
+                  1.被借调函数的执行时机不同
+                    call方法会立即调用被借调函数
+                    bind方法不会立即调用被借调函数
+
+                  2.返回值不同
+                    call方法的返回值是被借调函数的执行结果
+                    bind方法的返回值一定是一个被改变了this指向的全新函数
+
+                  3.改变this的时效性不同
+                    call方法只会临时修改本次执行的this指向,对以后执行没有任何响应
+                    bind方法会永久修改返回的函数的this指向
+                      注意点:这个永久很绝对,后续即便再次使用call,apply,bind也无法修改该函数的this指向了
+
+                  4.传参次数不同
+                    由于call方法会立即调用被借调函数,所以他只有一次传入实参的机会
+                    bind方法由于返回的是一个全新的函数,并不会立即执行该函数,所以它具有两次传入实参的机会
+
+        */
+
+      function fn(a, b, c) {
+        console.log(this, a, b, c);
+        return a + b + c;
+      }
+
+
+      var obj = {
+        name: "xiaoming",
+        fn: fn,
+      };
+
+      // fn();
+      // console.log(1)
+      // fn.call(obj,3,4,5);
+      // fn();
+
+      // var result = fn.bind(obj);
+      // var data = result(8,10,9);
+      // console.log(data)
+      // result.call(window);
+
+      // console.log(fn===result)
+
+      
+      // fn.call();
+      // fn.bind()();
+
+      //------------------------------------------
+      Function.prototype.myBind = function(thatThis,...args){
+        /*
+          this->被借调函数(fn)
+          thatThis->需要强行改变的this指向
+        */
+
+        var that = this;
+
+        return function(...args2){
+          that.call(thatThis,...args,...args2);
+        }
+
+      }
+      
+      var result = fn.myBind(null,7,8,9);
+      // var data = result(8,9);
+      // result.call(obj);
+      // result()
+      // result()
+      // result()
+      // result()
+      // result()
+
+
+      /*
+        函数柯里化
+          他只是一种代码的书写风格
+          将一个本来接收多个参数的函数,拆分成多个函数,每个函数只接收一个参数
+      
+      
+      */
+
+      // function person(name,age,sex){
+      //   return {
+      //     name,
+      //     age,
+      //     sex
+      //   }
+      // }
+
+      // var p1 = person('xiaoming',28,'男');
+      // var p2 = person('xiaohong',23,'女');
+
+      // console.log(p1,p2)
+
+      //-------------------------------------
+      // function person(sex){
+      //   return function(name,age){
+      //     return {
+      //       name,
+      //       age,
+      //       sex
+      //     }
+      //   }
+      // }
+
+      // var woman = person('女');
+      // var p1 = woman('xiaohong',23);
+      // var p2 = woman('xiaowang',26);
+
+      // console.log(p1,p2)
+
+      //-------------------------------------------
+      
+      // function person(sex){
+      //   return function(age){
+      //     return function(name){
+      //       return {
+      //         name,
+      //         age,
+      //         sex
+      //       }
+      //     }
+      //   }
+      // }
+
+      // var woman = person('女');
+      // var young = woman(18);
+      // var p1 = young('xiaohong');
+      // var p2 = young('xiaowang');
+
+      // console.log(p1,p2)
+
+      //-------------------------------------
+      function person(sex,age,name){
+        return {
+          name,
+          age,
+          sex
+        }
+      }
+
+      var young = person.bind(null,'女',18);
+      var p1 = young('xiaohong');
+      var p2 = young('xiaowang');
+      console.log(p1,p2)
+
+
+    </script>
+  </body>
+</html>
