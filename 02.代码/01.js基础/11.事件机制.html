@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app">app</div>
+    <script>
+    /*  
+        事件机制
+            1.事件是什么?事件机制又是什么?
+                事件->在程序运行的过程中,发生的事情或者发生的操作
+                例如:在项目运行的时候,用户点击了某个按钮
+
+                事件的组成部分:
+                    1.事件源
+                    2.事件名
+                    3.事件处理器(事件回调函数)
+
+                如果触发了一个事件,那么浏览器会自动执行对应的事件处理器
+
+                事件机制->在项目中,很可能同时触发多个事件,那么这些事件执行的先后顺序就是事件机制
+
+            2.一共出现过几种事件机制?
+                1.事件捕获机制(网景浏览器)
+                2.事件冒泡机制(IE浏览器)
+                3.标准事件机制(又称为标准事件流)
+
+            3.标准事件机制中,分为几个阶段?
+                1.事件捕获阶段
+                    从最外层的document元素开始,向内逐层触发同类型事件,直到目标元素为止
+
+                2.目标阶段
+                    触发目标元素身上所有同类型事件
+
+                3.事件冒泡阶段
+                    从最内层的目标元素开始,向外逐层触发同类型事件,直到document元素为止
+
+            4.为什么要有事件机制?
+                开发者可以通过这些事件,知道用户到底做了什么操作
+                    从而实现与用于的交互效果
+
+            5.怎么使用事件机制?
+                绑定事件的语法有2种
+                DOM 0语法
+                    语法:
+                        绑定语法:div.onclick=function(){}
+                        解绑语法:div.onclick=null;
+                    本质:给div对象的onclick属性进行赋值操作
+                    优点:
+                        该语法绑定事件简单
+                        该语法解绑事件简单
+                    缺点:
+                        由于该语法本质是给onclick属性赋值,所以即便执行多次,
+                            也只会留下最后一个事件处理器
+
+                DOM 2语法
+                    语法:
+                        绑定语法:div.addEventListener('click',function(){})
+                        解绑语法:div.removeEventListener('click',function(){})
+                    本质:找到div对象身上的addEventListener方法,进行调用,并传入实参
+
+                    优点:
+                        1.由于该语法是调用函数,所以可以调用多次
+                            最终结果就是可以让一个事件具有多个事件处理器
+
+                    缺点:
+                        1.该语法绑定事件复杂
+                        2.该语法解绑事件更复杂
+
+                    第三个实参:
+                        数据类型:布尔值||对象
+                        布尔值:
+                            true->代表当前事件处理器绑定于捕获阶段
+                            false->代表当前事件处理器绑定于冒泡阶段(默认值)
+
+                        对象:
+                            captured属性
+                                true->代表当前事件处理器绑定于捕获阶段
+                                false->代表当前事件处理器绑定于冒泡阶段(默认值)
+
+                            passive属性
+                                true->代表回调函数中的e.preventDefault调用生效
+                                false->代表回调函数中的e.preventDefault调用失效
+                                    如果写了false,那么即便回调函数中使用了上述方法,也无效
+                        
+                问题:请问如何阻止冒泡?
+                回答:
+                    1.event.stopPropagation();  =>  给目前的高级浏览器用的
+                    2.event.cancelBubble=true;  =>  专门给IE用的
+
+                问题:请问如何阻止捕获?
+                回答:event.stopPropagation该方法在捕获阶段调用,就是阻止捕获
+
+            6.在哪用?
+                事件委托相关
+
+
+
+    
+    */
+    function handler(e){
+        e.preventDefault();
+        console.log(1)
+    }
+
+    app.addEventListener('click',handler)
+
+    app.removeEventListener('click',handler)
+    </script>
+  </body>
+</html>
