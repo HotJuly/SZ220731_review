@@ -40,6 +40,9 @@
         .then
             目的:他可以监视前面promise对象的状态变化,并执行对应的回调函数
                 可以获取到promise的result值
+                
+                额外效果:其实只要.then前面的promise对象不是pending状态,就会自动执行对应的回调函数
+
             数据类型:函数
             接收参数:
                 个数:0-2个
@@ -53,6 +56,7 @@
                     2.无论回调函数返回任何内容,都不会影响到.then函数的返回结果
                     3.回调函数返回成功或者失败的Promise对象,.then方法都不会复用这个对象
                         只会说创建全新的promise对象,这个对象的状态会参考返回的那个Promise对象
+                    4.then方法只有等前面的promise处于非pending状态,才会将回调函数放入微任务队列
 
             返回值:一个全新的promise对象(简称p2)
                 状态变为成功
@@ -67,6 +71,18 @@
                     2.如果回调函数返回一个失败的Promise对象,那么p2就会变为失败状态
 
                 第五种:如果没有对应的回调函数执行,那么p2就会参考p1的状态
+
+      .catch
+        目的:它可以监视前面promise对象的状态,如果变为失败,就执行该回调函数
+        数据类型:函数
+        接收参数:
+          个数:1个
+          数据类型:函数
+        返回值:promise对象
+
+        其实他就是.then的语法糖
+          .catch(()=>{}) 等同于 .then(null,() => {});
+
     */
       //   var p1 = new Promise((resolve,reject)=>{
       //     setTimeout(()=>{
@@ -109,24 +125,77 @@
 
       //----------------------------------------------
 
+      // var p1 = new Promise((resolve, reject) => {
+      //   setTimeout(() => {
+      //   //   resolve(111);
+      //     reject(111);
+      //   }, 2000);
+      // });
+
+      // p1.then(
+      //   null,
+      //   null
+      // ).then(
+      //   () => {
+      //     console.log(3);
+      //   },
+      //   () => {
+      //     console.log(4);
+      //   }
+      // );
+
+      //-----------------------
+
+      // var p1 = new Promise((resolve, reject) => {
+      //   setTimeout(() => {
+      //     resolve();
+      //   }, 2000);
+      // });
+
+      // setTimeout(() => {
+      //   p1.then(() => {
+      //     console.log(1);
+      //   });
+      // }, 3000);
+
+      //------------------------------------------
+
+      // var p1 = new Promise((resolve, reject) => {
+      //   setTimeout(() => {
+      //     resolve();
+      //   }, 2000);
+      // });
+
+      // p1.then(null,() => {
+      //   console.log(1);
+      // });
+
+      // Promise.resolve().then(()=>{
+      //   console.log(2);
+      // });
+
+      //---------------------------------
+
       var p1 = new Promise((resolve, reject) => {
         setTimeout(() => {
-        //   resolve(111);
-          reject(111);
+          reject();
         }, 2000);
       });
 
-      p1.then(
-        null,
-        null
-      ).then(
+      p1
+      .then(
+        () => {
+          console.log(1);
+        }
+      )
+      .then(
         () => {
           console.log(3);
-        },
-        () => {
-          console.log(4);
         }
-      );
+      )
+      .catch(()=>{
+        console.log(5);
+      })
     </script>
   </body>
 </html>
