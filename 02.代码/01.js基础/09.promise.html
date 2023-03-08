@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      /*
+        Promise
+            数据类型:函数(构造函数)
+            接收实参
+                个数:1个
+                数据类型:函数(执行器函数)
+                该执行器函数会被同步调用
+                执行器函数一共接受两个参数
+                    resolve方法
+                        调用该方法,会导致p1对象的状态变为成功状态
+
+                    reject方法
+                        调用该方法,会导致p1对象的状态变为失败状态
+
+                    在调用以上两个方法的时候,可以传入实参,这实参数据会成为当前p1的result
+
+            返回值:promise实例对象(简称p1)
+                state状态
+                    pending->等待中(默认值)
+                    resolved/fulfilled->成功(完成)
+                    rejected->失败
+
+                    注意:promise的状态不可逆,只能变化一次
+
+                result结果值
+                    默认值为undefined
+
+                    可以通过resolve和reject方法进行控制
+
+        .then
+            目的:他可以监视前面promise对象的状态变化,并执行对应的回调函数
+                可以获取到promise的result值
+            数据类型:函数
+            接收参数:
+                个数:0-2个
+                数据类型:回调函数
+                如果监视的promise对象变为成功状态,就执行第一个回调函数
+                如果监视的promise对象变为失败状态,就执行第二个回调函数
+                    第二个回调函数可以捕获报错,防止控制台报错提示
+
+                注意:
+                    1.可以通过以上两个回调函数,声明形参来接收p1的结果值
+                    2.无论回调函数返回任何内容,都不会影响到.then函数的返回结果
+                    3.回调函数返回成功或者失败的Promise对象,.then方法都不会复用这个对象
+                        只会说创建全新的promise对象,这个对象的状态会参考返回的那个Promise对象
+
+            返回值:一个全新的promise对象(简称p2)
+                状态变为成功
+                    1.只要回调函数中的代码,全部正常执行结束,那么p2就会变为成功状态
+                        严格来说,只要返回的不是Promise对象,那么p2就会变为成功状态
+
+                    2.如果回调函数返回一个成功的Promise对象,那么p2就会变为成功状态
+
+                状态变为失败
+                    1.如果回调函数中的代码,没能成功执行结束,那么p2就会变为失败状态
+
+                    2.如果回调函数返回一个失败的Promise对象,那么p2就会变为失败状态
+
+                第五种:如果没有对应的回调函数执行,那么p2就会参考p1的状态
+    */
+      //   var p1 = new Promise((resolve,reject)=>{
+      //     setTimeout(()=>{
+      //         resolve(111);
+      //     },2000)
+      //     // setTimeout(()=>{
+      //     //     reject();
+      //     // },3000)
+      //   });
+      //   console.log(p1)
+
+      //--------------------------------------------
+
+      //   var p1 = new Promise((resolve, reject) => {
+      //     setTimeout(() => {
+      //       resolve(111);
+      //       //   reject();
+      //     }, 2000);
+      //   });
+      //   //   console.log(p1)
+
+      //   var p3 = Promise.resolve();
+      //   var p2 = p1.then(
+      //     (data) => {
+      //       console.log(1, data);
+
+      //       //   throw new Error('xixi')
+      //       //   return 333;
+      //       //   return Promise.resolve();
+      //       //   return Promise.reject();
+
+      //       return p3;
+      //     },
+      //     (error) => {
+      //       console.log(2, error);
+      //     }
+      //   );
+
+      //   console.log(p2,p3);
+
+      //----------------------------------------------
+
+      var p1 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+        //   resolve(111);
+          reject(111);
+        }, 2000);
+      });
+
+      p1.then(
+        null,
+        null
+      ).then(
+        () => {
+          console.log(3);
+        },
+        () => {
+          console.log(4);
+        }
+      );
+    </script>
+  </body>
+</html>
