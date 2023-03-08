@@ -16,34 +16,92 @@
       aaaaaaa
   </div>
   <script>
-      Promise.resolve().then(() => { // 微任务
-          alert('promise1') // 页面渲染了吗?
-      }) 
+    /*
+        浏览器不仅是多线程,他还是一个多进程的软件
+            负责js代码解析的是js线程(又称为js引擎)
+            负责页面渲染的是GUI线程
 
-      Promise.resolve().then(() => { // 微任务
-          alert('promise2') // 页面渲染了吗?
-      }) 
+            js线程与GUI线程是互斥的
 
-      setTimeout(() => {// 宏任务
-          alert(document.getElementById('content').innerHTML)  // 页面渲染了吗?
-      }, 0)
+            页面首次渲染整体流程:
+                1.首先执行js主线程代码
+                2.清空微任务队列
+                3.GUI线程渲染页面
+                4.执行宏任务
 
-      document.getElementById('test').onclick = () => {// 宏任务
+            页面更新渲染整体流程:
+                1.清空微任务队列
+                2.GUI线程渲染页面
+                3.执行宏任务
+    
 
-          document.getElementById('content').innerHTML = 'xxxx'
+        面试题:区分挂载和渲染
+            挂载和渲染不是同一个东西
+            挂载:将最新的DOM结构插入到html元素中
+            渲染:浏览器根据最新的html元素,将内容绘制到页面上,给用户观看
 
-          alert(document.getElementById('content').innerHTML)
+            渲染是异步的,挂载是同步的
 
-          setTimeout(() => {// 宏任务  
-              alert(document.getElementById('content').innerHTML) // 页面更新渲染了吗?
-          }, 0); 
 
-          Promise.resolve().then(() => { // 微任务 
-              alert('promise3') //页面更新渲染了吗?
-          }) 
-      }
+        问题:ES6之前并没有微任务,只有宏任务,为什么要新增微任务?
+        回答:
+            假设现在需要对页面进行10W次的修改
+                每次修改都使用微任务修改,那么页面最终只会渲染1次
+                每次修改都是用宏任务修改,那么页面最终会渲染10W次
+
+            扩展:Vue会在微任务中更新DOM节点
+
+    
+    */
+    //   Promise.resolve().then(() => { // 微任务
+    //       alert('promise1') // 页面渲染了吗?
+    //   }) 
+
+    //   Promise.resolve().then(() => { // 微任务
+    //       alert('promise2') // 页面渲染了吗?
+    //   }) 
+
+    //   setTimeout(() => {// 宏任务
+    //       alert(document.getElementById('content').innerHTML)  // 页面渲染了吗?
+    //   }, 0)
+
+    //   document.getElementById('test').onclick = () => {// 宏任务
+
+    //     // 渲染是异步的,所以这里修改8次,页面也不会渲染8次,只会以最后一次的结果渲染
+    //     // 类似于给页面渲染实现了防抖效果,以最后一次结果渲染
+    //       document.getElementById('content').innerHTML = 'xxxx'
+    //       document.getElementById('content').innerHTML = 'xxxx1'
+    //       document.getElementById('content').innerHTML = 'xxxx2'
+    //       document.getElementById('content').innerHTML = 'xxxx3'
+    //       document.getElementById('content').innerHTML = 'xxxx4'
+    //       document.getElementById('content').innerHTML = 'xxxx5'
+    //       document.getElementById('content').innerHTML = 'xxxx6'
+    //       document.getElementById('content').innerHTML = 'xxxx'
+
+    //       alert(document.getElementById('content').innerHTML)
+
+    //       setTimeout(() => {// 宏任务  
+    //           alert(document.getElementById('content').innerHTML) // 页面更新渲染了吗?
+    //       }, 0); 
+
+    //       Promise.resolve().then(() => { // 微任务 
+    //           alert('promise3') //页面更新渲染了吗?
+    //       }) 
+    //   }
       
-      alert('1111') // 页面渲染了吗?
+    //   alert('1111') // 页面渲染了吗?
+
+//-----------------------------------
+    var content = document.getElementById('content');
+    for (let index = 0; index < 100000; index++) {
+        // setTimeout(()=>{
+        //     content.innerText = index
+        // },10*index)
+
+        Promise.resolve().then(()=>{
+            content.innerText = index
+        })
+    }
 
   </script>
 </body>

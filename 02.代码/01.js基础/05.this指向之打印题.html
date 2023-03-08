@@ -21,9 +21,11 @@
 
             // arguments他会接收当前函数的所有实参,组成伪数组
             console.log(arguments[0]())
+            // console.log((length = arguments[0])())
         })(obj.fn,1,2,3);
         
         // obj.fn();
+        
 
         
         // (function(){
@@ -52,6 +54,20 @@
         // callbacks[0]();
         // callbacks.0();
         
+
+        //-----------------------------------
+        var obj = {
+            fn:function(){
+                console.log(this)
+            }
+        };
+
+        var a;
+        obj.fn();
+        (obj.fn)();
+        (a = obj.fn)();
+        // (a = 0x001)();
+        // a();
     </script>
 </body>
 </html>
