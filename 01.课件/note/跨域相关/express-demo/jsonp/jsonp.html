@@ -19,6 +19,7 @@
 
         btn.onclick=function(){
             let script = document.createElement('script');
+            // script标签只要有src属性,就会自动发送请求
             script.src="http://localhost:5000/jsonp?callback=getData"
             document.body.appendChild(script);
         }
