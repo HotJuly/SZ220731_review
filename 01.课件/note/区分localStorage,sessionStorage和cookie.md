@@ -1,0 +1,57 @@
+# 区分localStorage,sessionStorage和cookie
+
+1. 生命周期
+   1. cookie
+      1. 具有max-age属性,只要没有超过max-age设置的时间,cookie中的数据就会一直存在,超过时间才会销毁
+      2. 不具有max-age属性,代表当前cookie属于**会话级cookie**,当标签页或者浏览器关闭,存储的数据就会丢失
+   2. localStorage(持久化存储)
+      1. 只要开发者不主动删除,数据就会永久存在,没有过期时间
+   3. sessionStorage(会话级存储)
+      1. 如果关闭当前标签页或者浏览器,存储在内部的数据就会丢失
+2. 存储位置
+   1. cookie
+      1. 具有max-age属性,存储于硬盘中
+      2. 不具有max-age属性,存储于内存中
+   2. localStorage(持久化存储)
+      1. 存储于硬盘中
+   3. sessionStorage(会话级存储)
+      1. 存储于内存中
+3. 存储大小
+   1. cookie->4KB
+   2. localStorage->一般是5MB,IE浏览器是3012KB
+   3. sessionStorage->一般是5MB,IE浏览器是3012KB
+4. 作用范围
+   1. cookie
+      1. cookie的作用域范围与以下两个属性有关
+      2. domain属性
+         1. 假设domain="baidu.com",那么就说明当前cookie可以在baidu.com以及他的子域名中访问
+      3. path属性
+         1. 假设path="/a",那么就说明当前cookie可以在/a以及他的子路由中访问
+      4. 总结:**儿子可以访问父亲的cookie,父亲不能访问儿子的cookie**
+   2. localStorage
+      1. 是根据域名来存储数据的
+      2. 可以实现跨标签页传输数据
+      3. 多个标签页可以共享一份数据
+   3. sessionStorage
+      1. 存储数据跟域名有关
+      2. 他不可以实现跨标签页共享数据
+      3. 如果通过复制标签页可以得到上个标签页的sessionStorage,但是不是同一份数据
+5. 与服务器之间的关系
+   1. cookie(被借用的本地存储)
+      1. **cookie是由服务器创建,浏览器存储的**
+      2. 浏览器会自动存储,自动发送cookie
+      3. 服务器想把cookie数据传给前端,需要通过给响应头添加属性**Set-Cookie**以及属性值进行传递
+      4. 浏览器想要把cookie数据发给服务器,需要通过给请求头添加属性**Cookie**以及属性值进行传递
+   2. localStorage
+      1. 与服务器不熟
+   3. sessionStorage
+      1. 与服务器不熟
+6. 使用场景
+   1. cookie
+      1. 可以将本来需要存储在服务器上的数据,分散在每个用户的电脑中,减少服务器数据库的压力,简单来说就是省钱
+      2. cookie平常可能会保存一些用户坐标,用户个人基本信息,用户登录凭证等数据
+   2. localStorage
+      1. 需要长期使用,或者下次启动项目还需要使用的数据,就会存储于localStorage中
+   3. sessionStorage
+      1. 由于sessionStorage是存储于内存中,所以他的运算速度较快
+      2. 如果是本次临时要用的数据,就会保存在sessionStorage里面
