@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="wrap">
+      <div class="box">A</div>
+      <div class="box">B</div>
+      <h1>C</h1>
+      <h1>D</h1>
+    </div>
+    <script>
+      /*
+        事件委托(事件委派)
+            1.什么是事件委托
+                将子节点的事件绑定在父/祖节点身上
+
+                他是一种在开发过程中,开发人员根据事件机制总结出来的一种代码写法,
+                    他是一种性能优化的写法
+
+                它的原理就是通过事件冒泡实现的
+                    当子节点触发事件之后,浏览器会向上逐层触发同类型事件
+
+            2.为什么要使用事件委托?
+                没使用事件委托之前存在的问题:
+                    1.新增的后续节点,无法享受到之前绑定的事件
+                    2.浪费内存
+                        由于是给每个子节点绑定事件,所以每个子节点都会具有属于自己的事件处理器
+                        明明代码都相同,执行效果也一样,但是就是占据着多份内存空间
+
+                使用事件委托之后的好处:
+                    1.一劳永逸
+                        即便是后续新增的子节点,也可以享受到之前绑定的事件
+
+                    2.减少了内存的消耗
+                        由于现在事件是绑定给父节点,所以无论有多少个子节点,都只需要准备一份事件处理器
+
+            3.怎么使用事件委托?
+                1.封装专门用于事件委托的函数
+
+                    -给父/祖先节点绑定事件,并传入事件处理器
+                        这个事件处理器是全新的匿名函数
+
+                    -在事件处理器中,
+                        -获取到当前事件的触发者
+                            event.target
+
+                    -判断用户是否传入了指定触发元素的选择器字符串
+
+                    -判断当前触发者是否匹配传入的选择器字符串
+
+                    -如果身份匹配,那么就使用call方法,借调执行开发者传入的事件回调函数
+                        并强行将回调函数的this修改为当前的触发者event.target
+                        顺便将event对象作为实参传给事件回调函数
+
+                2.开发者使用流程1中封装的函数,给父/祖先节点绑定事件
+                    需要传入的参数4个,
+                        事件源
+                        事件名
+                        事件回调函数
+                        指定元素的选择器字符串
+
+
+            4.在哪使用过事件委托?
+                例如尚品汇首页的三级列表联动
+
+
+            面试讲到性能优化,一定要说清楚,没使用之前存在什么问题,使用之后问题是怎么解决的
+    */
+
+      /*
+        需求:当用户点击box元素的时候,需要弹出alert窗口提示用户
+            过两秒钟之后,需要给页面新增一个box元素
+    
+    */
+
+      // 没有使用事件委托写法
+
+      //   var boxs = document.querySelectorAll(".box");
+
+      //   for (let index = 0; index < boxs.length; index++) {
+      //     const box = boxs[index];
+      //     box.onclick=function(){
+      //         alert('box success')
+      //     }
+      //   }
+
+      //-------------------------------------
+      // 简单版本事件委托写法
+      // 该写法存在的问题,由于该写法并没有检查本次的触发者是谁
+      // 所以导致即便不是box元素,也能触发事件
+      //   var wrap = document.querySelector("#wrap");
+
+      //   wrap.onclick = function () {
+      //     alert("box success");
+      //   };
+
+      //   setTimeout(() => {
+      //     var box = document.createElement("div");
+      //     box.className = "box";
+      //     box.innerText = "E";
+
+      //     wrap.appendChild(box);
+      //   }, 2000);
+
+      //---------------------------------------------
+      //   完整版事件委托写法
+      var wrap = document.querySelector("#wrap");
+
+      function bindEvent2(ele, type, fn, selector) {
+        ele.addEventListener(type, function (event) {
+        // 获取到当前的触发者(目标元素)
+          const target = event.target;
+
+          if (selector) {
+            // matches方法可以判断前面的target元素,是否满足后面传入的选择器的要求
+            // 如果匹配当前选择器就返回true,否则返回false
+            if (target.matches(selector)) {
+                // 如果满足该选择器的要求,就执行内部代码,否则不执行任何代码
+              fn.call(target, event);
+            //   fn();
+            }
+          } else {
+            fn.call(ele, event);
+          }
+        });
+      }
+
+      bindEvent2(wrap, "click", function (event) {
+        // alert("box success");
+        this.classList.add('active');
+        // console.log(this)
+      },'.box');
+
+      setTimeout(() => {
+        var box = document.createElement("div");
+        box.className = "box";
+        box.innerText = "E";
+
+        wrap.appendChild(box);
+      }, 2000);
+    </script>
+  </body>
+</html>
