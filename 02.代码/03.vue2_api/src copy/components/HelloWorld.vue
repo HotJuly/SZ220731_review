@@ -5,15 +5,10 @@
 </template>
 
 <script>
-// 每个.vue文件,暴露出去的其实都是配置对象,不是组件实例对象
 export default {
   name: 'HelloWorld',
-  a:2,
   props: {
     msg: String
-  },
-  mounted(){
-    // console.log(this.$options.a)
   }
 }
 </script>
