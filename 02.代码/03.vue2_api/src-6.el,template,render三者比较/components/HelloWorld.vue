@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    <h1 @click="handler">{{ msg }}</h1>
+    <h1>{{ msg }}</h1>
   </div>
 </template>
 
@@ -8,17 +8,7 @@
 export default {
   name: 'HelloWorld',
   props: {
-    msg: String,
-    value:String
-  },
-  methods:{
-    handler(){
-      this.$emit('input789',"我是Hello的数据")
-    }
-  },
-  model:{
-    prop:"msg",
-    event:"input789"
+    msg: String
   }
 }
 </script>

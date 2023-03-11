@@ -21,3 +21,42 @@
 
 		父给子的是接收数据的函数
 				
+
+2.provide/inject
+	适用场景:祖孙组件
+
+	1.祖先组件,在自己的配置对象中,添加provide属性,并将需要暴露的数据放入该对象中
+		注意:如果想要把data中的数据暴露出去,provide必须写成函数形式
+
+	2.后代组件,在自己的配置对象中,添加inejct属性,并在数组中声明需要接收的属性即可
+
+	注意:provide暴露的数据是非响应式的
+		如果想要将数据变成响应式的,可以将数据先放入data中处理,然后在用provide暴露出去
+
+
+3.自定义事件
+	
+	v-model
+		对input框使用
+			1.将data中的状态数据,作为input框的默认值进行展示(属性名是value)
+    				<input type="text" :value="msg">
+
+			2.当用户在input框中输入数据的时候,会自动修改data中对应的状态数据
+    				<input type="text" :value="msg" @input="(event)=>msg=event.target.value">
+
+		对组件使用			
+			1.将data中的状态数据,作为组件的标签属性传递给子组件(默认属性名是value)
+    				<HelloWorld :value="msg"/>
+
+			2.给子组件绑定自定义事件,用来让子组件向父组件传递数据,修改对应的状态数据(默认事件名是input)
+    				<HelloWorld :value="msg" @input="(data)=>msg=data"/>
+			
+			注意:可以通过model配置选项,自定义父组件使用v-model传下来的属性名和事件名
+
+
+
+
+
+
+
+

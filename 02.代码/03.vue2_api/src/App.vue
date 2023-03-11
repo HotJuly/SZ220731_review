@@ -1,7 +1,10 @@
 <template>
   <div id="app">
-    <!-- <HelloWorld :msg="msg123" :fn="$options.fn1"/> -->
-    <HelloWorld :msg="msg123" :fn="fn2"/>
+    <input type="text" v-model="msg">
+    <!-- <input type="text" :value="msg" @input="(event)=>msg=event.target.value"> -->
+
+    <HelloWorld v-model="msg"/>
+    <!-- <HelloWorld :value="msg" @input="(data)=>msg=data"/> -->
   </div>
 </template>
 
@@ -10,22 +13,12 @@ import HelloWorld from './components/HelloWorld.vue'
 
 export default {
   name: 'App',
-  data(){
-    return{
-      msg123:"我是App的数据"
-    }
-  },
   components: {
     HelloWorld
   },
-  fn1(data){
-    console.log('fn1',data,this)
-    // this.hasdghjsa = data;
-  },
-  methods:{
-    fn2(data){
-      console.log('fn1',data,this)
-      // this.hasdghjsa = data;
+  data(){
+    return{
+      msg:"我是APP的初始数据"
     }
   }
 }

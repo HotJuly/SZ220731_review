@@ -1,6 +1,9 @@
 <template>
   <div class="hello">
-    <h1 @click="handler">{{ msg }}</h1>
+    <h1>{{ msg }}</h1>
+    <h1>aaa:{{ aaa }}</h1>
+    <h1>bbb:{{ bbb }}</h1>
+    <h1>ccc中的名字:{{ ccc.name }}</h1>
   </div>
 </template>
 
@@ -8,17 +11,13 @@
 export default {
   name: 'HelloWorld',
   props: {
-    msg: String,
-    value:String
+    msg: String
   },
-  methods:{
-    handler(){
-      this.$emit('input789',"我是Hello的数据")
-    }
-  },
-  model:{
-    prop:"msg",
-    event:"input789"
+  inject:["aaa","bbb","ccc"],
+  mounted(){
+    setTimeout(()=>{
+      this.ccc.name="laowang"
+    },2000)
   }
 }
 </script>
