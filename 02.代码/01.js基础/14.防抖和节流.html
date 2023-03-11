@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="btn">点击</button>
+    <script>
+        /*
+            防抖与节流
+                1.他们是什么?
+                    他们是开发者根据js的特性,研发出来的一种代码写法
+                        是一种性能优化的写法
+
+                2.为什么使用他们?
+                    没使用他们之前
+                        例如一个按钮用户快速点击10次,点击事件的回调函数就会触发10次
+                            触发频率过高
+
+                    使用他们之后得到的效果
+                        可以降低某个函数的触发频率
+
+                        节流就是在一段时间之内,连续触发多次函数,但是只有第一次函数执行会生效
+                        防抖就是在一段时间之内,连续触发多次函数,只有最后一次函数执行会生效
+
+                        区别:
+                            1.节流
+                                第一个函数会执行(立即执行)
+                                数据时效性较差,只能拿到最早的数据(旧数据)
+
+                            2.防抖
+                                最后一个函数会执行(会具有延迟执行的效果)
+                                数据时效性较好,可以拿到最后一次执行的数据(最新数据)
+
+                3.如何使用他们?
+                    参考下面代码书写
+
+                4.在哪使用过?
+                    节流的使用场景:例如登录,注册按钮
+                        可以降低发送请求的频率,减小服务器的压力
+
+                    防抖的使用场景:例如搜索框的单词联想功能
+                        由于用户可能会连续触发input事件,但是用户实际上想要搜索的是最后一次的内容
+                            所以必须使用防抖才能实现效果,因为防抖发送的数据都是最新数据
+        
+        
+        */
+        var btn= document.querySelector('#btn');
+        // btn.onclick=function(){
+        //     console.log('btn click')
+        // }
+        function fn(){
+            console.log('btn click',this)
+        }
+
+        // 以下是节流写法
+        // btn.onclick=throttle(fn,2000);
+
+        // function throttle(callback,delay){
+        //     var startTime = 0;
+        //     return function(event){
+        //         if(Date.now() - startTime > delay){
+        //             callback.call(this,event);
+        //             startTime = Date.now();
+        //         }
+        //     }
+        // }
+
+        // 以下是防抖写法
+        btn.onclick=debounce(fn,2000);
+
+        function debounce(callback,delay){
+            var timer = null
+            return function(){
+                if(timer){
+                    clearTimeout(timer)
+                }
+                timer = setTimeout(()=>{
+                    callback()
+                },delay)
+            }
+        }
+    </script>
+</body>
+</html>
