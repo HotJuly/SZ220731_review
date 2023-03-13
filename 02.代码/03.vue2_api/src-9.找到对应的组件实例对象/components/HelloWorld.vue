@@ -1,7 +1,6 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <h1 @click="handler">aaa:{{ aaa }}</h1>
   </div>
 </template>
 
@@ -9,19 +8,11 @@
 export default {
   name: 'HelloWorld',
   props: {
-    msg: String,
-    aaa:String
-  },
-  methods:{
-    handler(){
-      // this.aaa=8888;
-      this.$emit('update:aaa',"我是Hello的最新数据")
-    }
+    msg: String
   },
   mounted(){
-    this.$bus.$on('abc',(data)=>{
-      console.log('abc',data)
-    })
+    // console.log(this.$parent.msg)
+    // console.log(this.$root.msg222)
   }
 }
 </script>
