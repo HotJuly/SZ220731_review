@@ -45,7 +45,30 @@
         }
       });
 
+      /*
+        此行代码执行顺序
+          1.从作用域中找到vm变量,获取到vm变量的值
+          2.vm变量的值是一个实例对象,然后从该对象身上读取person属性的值
+          3.此处触发person属性数据代理的get方法,数据代理会从data对象身上找到同名属性值进行返回
+          4.由于想要读取data的person属性的值,所以会触发数据劫持的get方法,得到闭包中缓存的person对象的地址值
+          5.从person对象身上,找到name属性,然后对其进行赋值操作
+          6.由于name属性也被数据劫持过,所以此处会触发数据劫持的set方法
+
+          总结:这行代码,一共会触发一次代理,两次劫持
+            触发数据代理的操作:
+              触发person的get函数:vm.person
+
+            触发数据劫持的操作:
+              触发person的get函数:   vm._data.person
+              触发name的set函数:   person.name="laowang"
+
+            如果修改和设置vm的属性,就会触发数据代理的get/set
+            如果修改和设置data的属性,就会触发数据劫持的get/set
+      */
+      vm.person.name="laowang";
+
       // console.log(vm.msg)
+      // vm.msg="123";
     </script>
   </body>
 </html>
