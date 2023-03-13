@@ -8,8 +8,5 @@ Vue.use(ElementUI);
 Vue.config.productionTip = false
 
 new Vue({
-  data:{
-    msg222:666
-  },
   render: h => h(App),
 }).$mount('#app')
