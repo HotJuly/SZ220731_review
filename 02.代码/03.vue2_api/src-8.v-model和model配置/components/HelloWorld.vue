@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
+    <h1 @click="handler">{{ msg }}</h1>
   </div>
 </template>
 
@@ -8,11 +8,17 @@
 export default {
   name: 'HelloWorld',
   props: {
-    msg: String
+    msg: String,
+    value:String
   },
-  mounted(){
-    // console.log(this.$parent.msg)
-    // console.log(this.$root.msg222)
+  methods:{
+    handler(){
+      this.$emit('input789',"我是Hello的数据")
+    }
+  },
+  model:{
+    prop:"msg",
+    event:"input789"
   }
 }
 </script>
