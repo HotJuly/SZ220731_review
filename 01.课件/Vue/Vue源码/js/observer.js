@@ -34,6 +34,7 @@ Observer.prototype = {
 
         // 每次调用defineReactive方法,就会创建一个全新的dep对象
         // 也就是说data对象,每具有一个直系属性名,就会创建一个全新的dep对象
+        // 总结:每个响应式属性都具有一个对应的dep对象
         var dep = new Dep();  
 
         // 此处出现了隐式递归,也就是defineReactive函数调用了自己的上级函数observe

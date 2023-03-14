@@ -30,6 +30,8 @@ function MVVM(options) {
 
     理解:
       数据代理就是根据data对象的属性名,给vm对象也添加一份同名属性
+        注意:属性是跟着对象走的,多个对象可以具有相同的属性名,但是他们绝对不是同一个属性
+            只是对vm进行了操作,对data对象没有做任何事情
 
     目的:
       1.只是为了简化开发者的代码书写
@@ -56,6 +58,7 @@ function MVVM(options) {
   // });
 
   /*
+    响应式
     需求:当属性被修改时,页面需要自动展示最新的结果
     拆解:
       1.当属性被修改时
@@ -76,6 +79,8 @@ function MVVM(options) {
     理解
       将data对象中,所有的数据描述符,全部重写为访问描述符
         让每个属性都具有get/set方法
+
+        注意:数据劫持只会对data对象以及内部出现的对象的属性进行处理,对vm对象没有任何影响
 
     目的
       通过访问描述符的set方法,可以监视到开发者对这些响应式属性的修改/读取操作
@@ -110,7 +115,38 @@ function MVVM(options) {
   observe(data, this);
   // observe(data, vm);
 
+  /*
+    MVVM源码第三部分:模版解析
+    
+    理解
+      就是将页面中的插值语法等Vue相关的内容,转换成对应的效果
+
+    目的
+      找到模版结构中,对应的插值语法和指令,对其进行解析,将插值语法替换成需要显示的对应状态数据
+
+    流程:
+      1.构造调用Compile方法,将options.el属性传入内部
+      2.在Compile函数中,
+        -会通过传入的option.el字符串找到对应的真实DOM对象
+        -将app元素节点中的所有直系子节点,全部转移到文档碎片中
+        -调用init方法
+      3.在init方法中,会调用compileElement方法开始解析文档碎片的子节点
+      4.在compileElement方法中,会获取到当前元素所有子节点组成的数组,会开始遍历内部所有子节点
+        -如果这个子节点是元素节点,就开始获取他所有的标签属性,判断是否是Vue的指令
+        -如果这个子节点是文本节点,而且满足插值语法的正则匹配,那么调用compileText方法,解析该插值语法
+        -如果当前子节点还有子节点,那么就开始调用compileElement方法,递归后续子节点处理
+      5.在compileText方法中,会调用bind方法
+      6.在bind方法中,
+        -找到对应的文本更新器函数(textUpdater)
+        -调用getVMVal方法,获取到对应插值表达式的结果值,并将该结果值传入文本更新器函数
+          最终文本更新期函数,会将对应的文本节点,更新成最新的数据
+        -创建一个对应的watcher实例对象
+          总结:页面上,每具有一个插值表达式,就会创建一个对应的watcher实例对象
+
+
+  */
   this.$compile = new Compile(options.el || document.body, this);
+  // this.$compile = new Compile("#app", vm);
 }
 
 MVVM.prototype = {
@@ -131,7 +167,7 @@ MVVM.prototype = {
       },
       set: function proxySetter(newVal) {
         me._data[key] = newVal;
-      },
+      }
     });
 
 

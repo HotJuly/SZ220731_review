@@ -7,6 +7,7 @@
   <body>
     <div id="app">
       <p class="b">{{msg}}</p>
+      <p class="b">{{person.name}}</p>
     </div>
     <script src="./js/observer.js"></script>
     <script src="./js/watcher.js"></script>
@@ -45,7 +46,11 @@
         }
       });
 
+
       /*
+        前言
+          js堆内存中,所有的对象之间都一定是兄弟关系(并列关系,不存在哪个对象有包裹另外一个对象这个存储关系)
+
         此行代码执行顺序
           1.从作用域中找到vm变量,获取到vm变量的值
           2.vm变量的值是一个实例对象,然后从该对象身上读取person属性的值
@@ -64,6 +69,9 @@
 
             如果修改和设置vm的属性,就会触发数据代理的get/set
             如果修改和设置data的属性,就会触发数据劫持的get/set
+
+            如果触发数据代理,一定会触发数据劫持
+            如果触发数据劫持,是一定不会触发数据代理的
       */
       vm.person.name="laowang";
 
