@@ -3,11 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <title>06_数据劫持-数据绑定</title>
-</head>
+  </head>
   <body>
     <div id="app">
       <p class="b">{{msg}}</p>
       <p class="b">{{person.name}}</p>
+      <p class="b">{{arr.1}}</p>
     </div>
     <script src="./js/observer.js"></script>
     <script src="./js/watcher.js"></script>
@@ -39,13 +40,13 @@
         el: "#app",
         data: {
           msg: "hello mvvm",
-          person:{
-            name:"xiaoming",
-            msg:"123"
-          }
-        }
+          person: {
+            name: "xiaoming",
+            msg: "123",
+          },
+          arr: [1, 2, 3, 4],
+        },
       });
-
 
       /*
         前言
@@ -76,7 +77,13 @@
       // vm.person.name="laowang";
 
       // console.log(vm.msg)
-      vm.msg="123";
+      // vm.msg="123";
+      // console.log(vm.msg)
+
+      setTimeout(() => {
+        vm.arr[1] = 9;
+        console.log(vm.arr);
+      }, 3000);
     </script>
   </body>
 </html>

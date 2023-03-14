@@ -86,7 +86,7 @@ Compile.prototype = {
         var nodeAttrs = node.attributes,
             me = this;
 
-            console.log(nodeAttrs);
+            // console.log(nodeAttrs);
 
         [].slice.call(nodeAttrs).forEach(function(attr) {
             var attrName = attr.name;

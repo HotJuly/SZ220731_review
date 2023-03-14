@@ -157,6 +157,9 @@ Dep.prototype = {
         this.subs.forEach(function(sub) {
             sub.update();
         });
+        // this.subs.forEach(function(sub) {
+        //     watcher.update();
+        // });
     }
 };
 
