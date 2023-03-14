@@ -174,8 +174,12 @@ var compileUtil = {
 
         // watcher对象在首次渲染中,没有用,他的目的是为了实现响应式流程
         // 每个插值语法都会生成一个watcher实例对象
-        // new Watcher(vm, exp, function(value, oldValue) {
-        //     updaterFn && updaterFn(node, value, oldValue);
+        // 每次创建watcher对象的时候,都会将当前插值语法的表达式传入内部
+        new Watcher(vm, exp, function(value, oldValue) {
+            updaterFn && updaterFn(node, value, oldValue);
+        });
+        // new Watcher(vm, "msg", function(value, oldValue) {
+        //     textUpdater && textUpdater(文本节点, value, oldValue);
         // });
 
     },

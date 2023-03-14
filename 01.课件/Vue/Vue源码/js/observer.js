@@ -133,11 +133,17 @@ function Dep() {
 
 Dep.prototype = {
     addSub: function(sub) {
+        // dep.addSub(watcher);
+        // this->dep,sub->watcher对象
         this.subs.push(sub);
+        // 此处dep对象在使用自己的subs属性,收集与自身相关的所有的watcher对象
+        // 此处响应式属性在使用subs属性,收集与自身相关的插值语法
     },
 
     depend: function() {
+        // this->dep对象
         Dep.target.addDep(this);
+        // watcher.addDep(dep);
     },
 
     removeSub: function(sub) {
