@@ -68,6 +68,42 @@ export default {
 
         Vue会使用一个更新DOM的方法,遍历queue数组中收集到的所有需要更新的组件的watcher对象,
           一次性遍历更新
+
+      Vue2响应式更新流程:
+        1.开发者修改某个代理属性的值,此时会触发该代理属性的set方法
+          例如:this.isShow1 = true;
+
+        2.在数据代理的set方法中,会自动修改$data对象中,同名的属性值,
+          此时会触发数据劫持的set方法
+          例如:this.$data.isShow1 = true;
+
+        3.在数据劫持的set方法中,Vue2会调用dep.notify方法
+
+        4.在notify方法中,会遍历dep.subs数组,获取到内部存储的多个watcher对象 
+          并调用这些watcher对象的update方法
+
+        5.在update方法中,会调用queueWatcher方法
+
+        6.在queueWatcher方法中,
+          -首先会判断当前这个watcher对象,是否已经登记过要更新了
+            如果已经登记过,后续代码不触发
+
+          -会使用queue数组,收集本次触发update方法的watcher对象
+
+          -然后再判断当前本次执行queueWatcher方法,是否是第一次执行
+            如果不是第一次执行,后续代码不执行
+
+          -如果这是第一次执行queueWacther方法,就会将更新DOM的方法传给nextTick方法
+            由于nextTick中,用的其实是微任务执行回调函数,所以更新DOM的方法触发时间是在清空微任务队列的时候
+
+        7.在执行nextTick的微任务的时候,会触发更新DOM的方法
+          -使用sort对所有要更新的watcher对象进行排序(根据watcher的id进行排序)
+            watcher的id越小,层级越高,组件越大
+
+          -使用for循环,遍历queue数组,获取到所有需要更新的watcher对象
+            调用每个watcher对象的run方法,run方法中会调用cb回调函数,来让对应的组件进行更新
+
+
     */
     
 
