@@ -11,7 +11,8 @@ Vue.use(VueRouter);
 // 顺带问下:什么是路由器
 // 用来管理多个路由的对象,称为路由器
 export default new VueRouter({
-    mode:"hash",
+    // mode:"hash",
+    mode:"history",
     routes:[{
         path:"/home",
         component:Home
