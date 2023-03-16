@@ -1,13 +1,10 @@
 <template>
   <div id="app">
-    <!-- <HelloWorld v-if="isShow" msg="Welcome to Your Vue.js App"/> -->
-    <ul>
-      <li v-for="(item,index) in arr" :key="index">
-        <label>{{ item }}</label>
-        <input type="text">
-      </li>
-    </ul>
-    <button @click="handler">添加</button>
+    <HelloWorld v-if="$route.meta.showHeader" msg="Welcome to Your Vue.js App"/>
+    <router-view></router-view>
+    <router-link to="/home">toHome</router-link>
+    <!-- <router-link tag="h1" to="/about">toAbout</router-link> -->
+    <button @click="toAbout">toAbout</button>
   </div>
 </template>
 
@@ -16,18 +13,17 @@ import HelloWorld from './components/HelloWorld.vue'
 
 export default {
   name: 'App',
-  data(){
-    return{
-      arr:[1,2,3,4,5]
-    }
-  },
-  methods:{
-    handler(){
-      this.arr.splice(1,0,6);
-    }
-  },  
   components: {
     HelloWorld
+  },
+  methods:{
+    toAbout(){
+      // this.$router.push("/about");
+      this.$router.replace("/about");
+    }
+  },
+  mounted(){
+    // console.log(this.$route.meta)
   }
 }
 </script>
