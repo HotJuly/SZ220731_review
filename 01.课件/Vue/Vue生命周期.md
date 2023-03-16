@@ -6,11 +6,19 @@
 2. 阶段划分
    1. 初始化阶段(挂载阶段)
       1. beforeCreate
+         1. **beforeCreate之前,Vue正在初始化事件和生命周期**
       2. created
          1. 发送请求
             1. 此处发送请求时机更早,相对来说,更早出去的请求,应该更早回来
          2. 注意:不要在这里做一些比较占用时间,比较复杂的逻辑操作
+         3. **beforeCreate之后created之前,Vue正在初始化注入和响应式**
+            1. **注入:将一些数据放到当前组件实例对象身上,方便后续开发者访问**
+               1. **例如:将data,props,computed,methods,provide的等数据全部在组件this身上来一份**
+                  1. **数据代理就是数据注入的其中一员**
+            2. **响应式:其实就是源码中的数据劫持,会将data中所有的属性都变成访问描述符**
       3. beforeMount
+         1. **created之后beforeMount之前,Vue会收集需要解析的模版,并将模版解析成为render函数**
+            1. **注意:此处Vue只会创建得到render函数,并不会调用它**
       4. mounted
          1. 发送请求
             1. 请求发送的比较晚,所以回来的相对时间也比较晚
@@ -19,6 +27,7 @@
          3. 操作真实DOM
             1. 创建轮播图
             2. better-scroll滑动库
+         4. **beforeMount之后mounted之前,Vue会调用render函数,生成当前组件的虚拟DOM,然后根据虚拟DOM创建对应的真实DOM,并替换掉页面上对应的el元素**
    2. 更新阶段
       1. beforeUpdate
          1. 此处由于响应式属性更新会触发,此处可以拿到最新数据,但是无法获取到最新的DOM结构
@@ -41,9 +50,12 @@
       2. destoryed
    4. keep-alive专用
       1. activated(激活)
+         1. 用来替代被缓存组件的初始化阶段
       2. deactivated(失活)
+         1. 用来替代被缓存组件的卸载阶段
    5. 捕获后代组件错误
       1. errorCaptured
+         1. 项目中,实际上用的更多的,应该是Vue.config.errorHandler方法
    6. 后端渲染专用
       1. ServerPrefetch
 
