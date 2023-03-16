@@ -9,6 +9,18 @@ export default {
   name: 'HelloWorld',
   props: {
     msg: String
+  },
+  beforeCreate(){
+    console.log('---------HelloWorld beforeCreate--------')
+  },
+  created(){
+    console.log('---------HelloWorld created--------')
+  },
+  beforeMount(){
+    console.log('---------HelloWorld beforeMount--------')
+  },
+  mounted(){
+    console.log('---------HelloWorld mounted--------')
   }
 }
 </script>
