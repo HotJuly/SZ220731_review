@@ -1,7 +1,7 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import Home from '@/components/Home.vue';
-import About from '@/components/About.vue';
+import Vue from "vue";
+import VueRouter from "vue-router";
+import Home from "@/components/Home.vue";
+import About from "@/components/About.vue";
 
 Vue.use(VueRouter);
 
@@ -11,17 +11,20 @@ Vue.use(VueRouter);
 // 顺带问下:什么是路由器
 // 用来管理多个路由的对象,称为路由器
 export default new VueRouter({
-    // mode:"hash",
-    mode:"history",
-    routes:[{
-        path:"/home",
-        component:Home
-        // component:()=>import('@/components/Home.vue')
-    },{
-        path:"/about",
-        component:About,
-        meta:{
-            showHeader:true
-        }
-    }]
+//   mode: "hash",
+  mode:"history",
+  routes: [
+    {
+      path: "/home",
+      component: Home,
+      // component:()=>import('@/components/Home.vue')
+    },
+    {
+      path: "/about",
+      component: About,
+      meta: {
+        showHeader: true,
+      },
+    },
+  ],
 });

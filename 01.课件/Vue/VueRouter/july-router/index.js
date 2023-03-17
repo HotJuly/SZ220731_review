@@ -51,6 +51,7 @@ class MyRouter{
                         ]
                     
                     转换之后的mapRoutes:
+                    mapRoutes['/home']
                         {
                             "/home":{
                                 component:Home,

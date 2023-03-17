@@ -18,8 +18,8 @@ export default {
   },
   methods:{
     toAbout(){
-      // this.$router.push("/about");
-      this.$router.replace("/about");
+      this.$router.push("/about");
+      // this.$router.replace("/about");
     }
   },
   mounted(){

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+        /*
+            需求:封装一个函数,实现根据输入的path数据,
+                返回匹配path属性的对象中的component值
+
+            进阶要求:考虑路由对象非常多的情况下,性能优化问题
+        
+        */
+      var path = "/detail";
+      var routes = [
+        {
+          path: "/home",
+          component: "Home 666",
+        },
+        {
+          path: "/about",
+          component: "About 777",
+        },
+        {
+          path: "/search",
+          component: "Search 888",
+        },
+        {
+          path: "/detail",
+          component: "Detail 888",
+        },
+      ];
+
+      // function find(path){
+      //   var str = null;
+      //   routes.forEach((routeObj)=>{
+      //     if(routeObj.path===path){
+      //       str = routeObj.component
+      //     }
+      //   })
+      //   return str;
+      // }
+      // console.log(find(path))
+
+      //------------------------------
+      var routeMap = {};
+
+      routes.forEach((routeObj)=>{
+        var key = routeObj.path;
+        var value = routeObj.component;
+        routeMap[key] = value;
+      })
+      // console.log(routeMap)
+
+      function find(path){
+        return routeMap[path]
+      }
+      
+      console.log(find(path))
+    </script>
+  </body>
+</html>
