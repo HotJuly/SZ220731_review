@@ -2,6 +2,7 @@ import { login, logout, getInfo } from "@/api/user";
 import { getToken, setToken, removeToken } from "@/utils/auth";
 import { resetRouter,constantRoutes,anyRoutes, asyncRoutes } from "@/router";
 import router from "@/router";
+import {cloneDeep} from 'lodash';
 
 function filterAsyncRoutes(asyncRoutes, routeNames) {
   /*
@@ -71,7 +72,7 @@ const mutations = {
     state.buttons = buttons;
 
     // 过滤权限
-    const newAsyncRoutes = filterAsyncRoutes(asyncRoutes, state.routeNames);
+    const newAsyncRoutes = filterAsyncRoutes(cloneDeep(asyncRoutes), state.routeNames);
     // console.log("newAsyncRoutes", newAsyncRoutes);
 
     // addRoutes需要一个异步路由组成的数组

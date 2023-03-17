@@ -1,23 +1,23 @@
-import Vue from 'vue'
+import Vue from "vue";
 
-import 'normalize.css/normalize.css' // A modern alternative to CSS resets
+import "normalize.css/normalize.css"; // A modern alternative to CSS resets
 
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
-import locale from 'element-ui/lib/locale/lang/en' // lang i18n
+import ElementUI from "element-ui";
+import "element-ui/lib/theme-chalk/index.css";
+import locale from "element-ui/lib/locale/lang/en"; // lang i18n
 
-import '@/styles/index.scss' // global css
+import "@/styles/index.scss"; // global css
 
-import App from './App'
-import store from './store'
-import router from './router'
-import * as API from '@/api';
-import CategorySelector from '@/components/CategorySelector';
-import HintButton from '@/components/HintButton';
-import '@/plugins/vcharts';
+import App from "./App";
+import store from "./store";
+import router from "./router";
+import * as API from "@/api";
+import CategorySelector from "@/components/CategorySelector";
+import HintButton from "@/components/HintButton";
+import "@/plugins/vcharts";
 
-Vue.component('CategorySelector',CategorySelector);
-Vue.component('HintButton',HintButton);
+Vue.component("CategorySelector", CategorySelector);
+Vue.component("HintButton", HintButton);
 
 Vue.prototype.$API = API;
 // vm.$API.trademark.getTradeMarkList();
@@ -29,8 +29,8 @@ Vue.prototype.$API = API;
 //   }
 // }
 
-import '@/icons' // icon
-import '@/permission' // permission control
+import "@/icons"; // icon
+import "@/permission"; // permission control
 
 // 该代码仅为了测试es6语法使用
 // import {default as a} from '@/api/product/trademark';
@@ -52,16 +52,34 @@ import '@/permission' // permission control
 // }
 
 // set ElementUI lang to EN
-Vue.use(ElementUI, { locale })
+Vue.use(ElementUI, { locale });
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
+Vue.directive("has", {
+  inserted(el, { value }) {
+    // console.log(el,value)
+    // el->当前使用指令的DOM节点
+    // value->当前指令的属性值
+
+    // 如果没有该按钮的使用权限,就将该按钮从页面上删除
+    // ["btn.Trademark.add","btn.Trademark.update","btn.Trademark.remove"]
+    // {"btn.Trademark.add":true,"btn.Trademark.update":true,"btn.Trademark.remove":true}
+    const buttons = store.state.user.buttons;
+
+    const result = buttons.includes(value);
+
+    if (!result) {
+      el.parentNode.removeChild(el);
+    }
+  },
+});
 
 new Vue({
-  el: '#app',
+  el: "#app",
   router,
   store,
-  render: h => h(App)
-})
+  render: (h) => h(App),
+});
