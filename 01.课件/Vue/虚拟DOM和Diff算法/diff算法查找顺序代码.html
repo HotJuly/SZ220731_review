@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 虚拟DOM对象身上会有一个$el属性,内部存放着上一次渲染时候生成的真实DOM
+        // 旧的虚拟DOM
+        var oldVNodes = [{key:1,$el:1},{key:2,$el:2},{key:3,$el:3},{key:4,$el:4}];
+
+        //新的虚拟DOM
+        var newVNodes = [{key:4,$el:null},{key:3,$el:null},{key:2,$el:null},{key:1,$el:null}];
+
+        // 这就是旧前指针
+        var oldStart = 0;
+
+        // 这就是旧后指针
+        var oldEnd = oldVNodes.length-1;
+
+        // 这就是新前指针
+        var newStart = 0;
+
+        // 这就是新后指针
+        var newEnd = newVNodes.length-1;
+
+        // 停止条件
+        // 如果新前超过了新后,或者旧前超过旧后,就需要停下来
+        // 如果新前超过新后代表这新的虚拟DOM列表已经全部遍历结束
+        // 如果旧前超过旧后代表这旧的虚拟DOM列表已经全部遍历结束
+        while(newStart-newEnd<=0&&oldStart-oldEnd<=0){
+            // 这个是旧前对应的虚拟DOM
+            var oldVNode1 = oldVNodes[oldStart];
+            // 这个是旧后对应的虚拟DOM
+            var oldVNode2 = oldVNodes[oldEnd];
+
+            // 这个是新前对应的虚拟DOM
+            var newVNode1 = newVNodes[newStart];
+            // 这个是新后对应的虚拟DOM
+            var newVNode2 = newVNodes[newEnd];
+
+            if(newVNode1.key===oldVNode1.key){
+                // 这里就是新前对旧前
+                newVNode1.$el = oldVNode1.$el;
+                oldStart++;
+                newStart++;
+            }else if(newVNode2.key===oldVNode2.key){
+                // 这里就是新后对旧后
+                newVNode2.$el = oldVNode2.$el;
+                oldEnd--;
+                newEnd--;
+            }else if(newVNode2.key===oldVNode1.key){
+                // 这里就是新后对旧前
+                newVNode2.$el = oldVNode1.$el;
+                oldStart++;
+                newEnd--;
+            }else if(newVNode1.key===oldVNode2.key){
+                // 这里就是新前对旧后
+                newVNode1.$el = oldVNode2.$el;
+                newStart++;
+                oldEnd--;
+            }
+        }
+
+        console.log(newVNodes)
+        
+    </script>
+</body>
+</html>

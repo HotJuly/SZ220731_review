@@ -1,8 +1,8 @@
 <template>
-  <div id="app">
+  "<div id="app">
     <h1>user.name:{{ user.name }}</h1>
     <HelloWorld msg="Welcome to Your Vue.js App" />
-  </div>
+  </div>"
 </template>
 
 <script>
