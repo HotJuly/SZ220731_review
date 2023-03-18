@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /*
+            Vue2和Vue3项目书写上最大的区别(Vue2的BUG)
+                1.Vue2新增属性很有可能没有响应式效果
+                    解决方法:可以使用this.$set或者Vue.set解决
+
+                2.Vue2删除响应式属性,没有响应式效果
+                    解决方法:可以使用this.$delete或者Vue.delete解决
+
+                3.Vue2操作数组下标不具有响应式效果
+                    解决方法:通过使用重写7种数组的方法,才能具有响应式效果
+        
+
+            Vue2是如何监视某个属性的变化的?
+                会使用Object.defineProperty方法,将data对象中原本的数据描述符全部变为访问描述符
+                    在通过访问描述符的set/get方法,监视用户操作
+
+                问题1的原因:
+                    因为新增的属性是数据描述符,他没有get/set方法,所以Vue2不知道开发者新增了哪些属性
+                        该属性错过了数据劫持的时间点
+                            1.组件初始化的时候,会数据劫持data中所有的属性名
+                            2.在更新响应式属性的时候,会对新值再次进行数据劫持
+
+                问题2的原因:
+                    因为访问描述符只能监视属性的设置和读取,没法监视属性的删除
+                        所以Vue2没法知道开发者删除了哪些属性
+
+                问题3的原因:
+                    Vue2技术上是可以对数组的下标实现响应式效果的
+                        是尤大大出于性能方面的考虑实现的,故意不对数组的下标进行数据劫持
+                            防止产生太多的dep对象
+        */
+
+
+        // let data = {
+        //     name:"xiaoming"
+        // }
+
+        //这里是Vue2的写法
+        // Object.defineProperty(data,"name",{
+        //     set(){
+        //         console.log('set')
+        //         // dep.notify()来通知DOM进行更新
+        //     },
+        //     get(){
+        //         console.log('get')
+        //         return 1111111;
+        //     }
+        // })
+
+        // console.log(data.name)
+        // data.name = "laowang";
+
+        // data.age = 66;
+
+        // delete data.name;
+
+        //----------------------------------------------------
+        // 这里是Vue3的写法
+
+        let data = {
+            name:"xiaoming"
+        }
+
+        const proxyObj = new Proxy(data,{
+            set(target,key,value){
+                // console.log('proxy set!!!',target,key,value)
+                // target[key]=value
+
+                Reflect.set(target,key,value);
+                // dep.notify()通知DOM更新
+            },
+            get(){
+                console.log('proxy get!!!')
+                // return 777;
+                return Reflect.get(target,key);
+            },
+            deleteProperty(target,key){
+                // console.log('proxy deleteProperty!!!',target,key)
+
+                // delete target[key];
+                Reflect.deleteProperty(target,key);
+                // dep.notify();
+            },
+            has(){
+                return true;
+            },
+            getPrototypeOf(){
+                return {
+                    name:"gebilaowang"
+                }
+            }
+        });
+
+        // data.name="laowang"
+        // proxyObj.name="laowang"
+        // console.log(proxyObj.name);
+
+        // console.log(data,proxyObj)
+
+        // proxyObj.age=66;
+        // delete proxyObj.name;
+
+        // arr[0]
+        //     =>arr.0
+        // console.log(data)
+
+        // console.log("asdhgjkgashjdghjasdghjsa" in proxyObj )
+        console.log(Object.getPrototypeOf(proxyObj))
+
+    </script>
+</body>
+</html>

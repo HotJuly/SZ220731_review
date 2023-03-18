@@ -6,7 +6,9 @@
 <script>
 export default {
   name: 'App',
-  // provide:{}||()=>{}
+  // provide:{
+    // count:123
+  // }||()=>{}
 }
 </script>
 
@@ -17,6 +19,13 @@ import HelloWorld from '@/components/HelloWorld'
 const count = ref(6);
 
 provide('count123',count);
+// provide('a',333);
+// provide('b',444);
+// provide('c',{
+//   d:1,
+//   e:2,
+//   f:3
+// });
 
 </script>
 
