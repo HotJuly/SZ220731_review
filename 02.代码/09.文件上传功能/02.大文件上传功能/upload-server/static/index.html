@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>上传文件</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+
+  <body>
+    <input type="file" id="uploaderInput" multiple="multiple" />
+    <div id="videoContent" style="visibility: hidden">
+      <video
+        id="video"
+        src=""
+        style="width: 400px"
+        muted
+        autoplay
+        controls
+      ></video>
+    </div>
+    进度:
+    <div id="process">0</div>
+  </body>
+</html>
+<script src="./js/jquery-1.12.4.js"></script>
+<script src="./js/md5.js"></script>
+<script src="./js/axios.js"></script>
+<script>
+  /*
+    大文件分段上传
+    流程:
+      1.给页面上的input框绑定change事件
+      2.在change事件的回调函数中,可以通过this.files获取到本次上传的文件信息
+      3.调用uploadOne函数,将file信息传入该函数
+      4.在uploadOne函数中,先获取上传文件的hash值
+        为什么要生成hash值?
+          目的是为了确定服务器接收到所有文件之后,拼接完成没有确实
+            如果文件缺失,那么前端和后端的hash值将会不同,反之相同
+      5.根据服务器的要求,准备相关数据
+        filename,total,index,data
+        为什么每次只发送2MB的数据?
+          不是前端发不了数据,是后端受不了了
+            他每次只能接收2MB的数据
+      6.调用upload函数,对需要上传的文件进行切片分段上传
+      7.可以根据index,来计算每次切割起点和终点,使用slice方法切割file文件
+      8.创建formData对象,并将上面收集到的5个属性数据,全部append到当前对象中
+      9.递归发送请求,直到所有文件全部发送结束为止
+
+
+    大文件断点续传功能
+      思路,其实就是在发送文件之前,先发送一个请求,获取上次发送的进度,发到了第几份
+        然后将得到份数,直接赋值给index变量,那么upload函数,就会从该份数之后继续发送
+  */
+  $('#uploaderInput').on('change',function(){
+    // console.log(this.files)
+    const file = this.files[0];
+
+    uploadOne(file);
+  })
+
+  async function uploadOne(file){
+    if(!file)return;
+
+    const hash = await getHash(file);
+
+    /*
+      本次上传视频,服务器那边的要求,需要传递五个数据
+        1.属性名data
+          里面存放上传的文件数据
+        2.属性名filename
+          里面存放上传文件的文件名称
+        3.属性名hash
+          里面存放上传文件的唯一标识hash值
+        4.属性名total
+          里面存放上传文件一共被分成了多少份
+        5.属性名index
+          里面存放本次发送的是第几份
+    */
+
+    // 从file.name中可以获取到文件名称,例如:1.小文件上传功能.mp4
+    const i = file.name.lastIndexOf('.');
+
+    // 该服务器要求把文件名称拼接时间戳
+    const filename = file.name.slice(0,i) + new Date().getTime() + file.name.slice(i)
+
+    // 当前文件的总大小
+    const size = file.size;
+
+    // 代表每次发送的文件大小
+    const shareSize = 2*1024*1024;
+
+    // 计算出当前文件一共要发送多少次请求
+    const total = Math.ceil(size/shareSize);
+
+    // 当前已经发送了几份
+    let index = 0;
+
+    upload();
+
+    async function upload(){
+      // 从哪里开始切割
+      const start = index*shareSize;
+
+      // 切到哪里为止
+      //此处需要考虑平常发送数据,和最后一次发送数据的情况
+      // 如果本次要发送的结尾下标,没有超过该文件的大小,就发送到本次计算的下标
+      // 如果本次要发送的结尾下标,已经超过了该文件的总大小,就发送到总大小即可
+      const end = (index+1)*shareSize>size?size:(index+1)*shareSize;
+
+      const data = file.slice(start,end);
+
+      const formData = new FormData();
+      formData.append('data',data);
+      formData.append('hash',hash);
+      formData.append('total',total);
+      formData.append('filename',filename);
+      formData.append('index',index);
+
+      const result = await axios.post('/uploadVideo',formData);
+
+      // 将index+1,代表本次请求成功,同时记录已经发送成功了多少份
+      index++;
+
+      if(index<total){
+        // 能进入这里就说明文件还没有全部发送结束
+        // console.log('没结束',result)
+        $('#process').text(result.data.process);
+        upload();
+      }else{
+        // 能进入这里就说明文件已经全部发送结束
+        $('#videoContent').css('visibility','visible');
+        $('#video').attr('src',result.data.videoUrl);
+        $('#process').text(result.data.msg);
+
+        // console.log('结束了',result)
+      }
+    }
+  }
+
+  function getHash(file){
+    return new Promise((resolve)=>{
+      // FileReader函数是浏览器内置的构造函数,它可以创建一个读取器获取本地内存中的某些数据
+      const reader = new FileReader();
+
+      // 将file文件的内容,编译成base64字符串进行输出
+      reader.readAsDataURL(file);
+
+      // 该事件如果被触发了,就说明文件已经读取结束
+      reader.onload=function(event){
+        // console.log(event)
+
+        // 获取到格式化完的base64字符串
+        const result = event.target.result;
+
+        // hex_md5方法是md5.js文件在全局暴露的方法
+        // 可以使用该方法对文件进行加密,获取到对应的hash值
+        const hash = hex_md5(result);
+
+        // console.log(hash)
+        // 将Promise对象变为成功状态,方便后续发送请求代码的执行
+        // 顺便把hash值传递出去
+        resolve(hash)
+      }
+    })
+  }
+</script>
