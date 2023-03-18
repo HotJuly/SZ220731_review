@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #chart{
+            width:800px;
+            height:400px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chart"></div>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@4.7.0/dist/echarts.min.js"></script>
+    <script>
+        function getRandomData(num){
+            var arr = [];
+            for (let index = 0; index < num; index++) {
+                var n = Math.floor(Math.random() *100 + 50)
+                arr.push(n);
+            }
+
+            return arr;
+        }
+
+        // echarts文件中,会暴露出一个echarts对象
+        // 通过该对象可以生成想要的图标信息
+
+        var chartDOM = document.querySelector('#chart');
+
+        // 此处会返回一个echarts的实例对象
+        var chart = echarts.init(chartDOM);
+
+        var option = {
+            // title属性专门配置与标题相关内容
+            title:{},
+
+            // xAxis属性专门负责x轴上的展示信息
+            xAxis:{
+                data:["衣","食","住","行"]
+            },
+            
+            // yAxis属性专门负责x轴上的展示信息
+            yAxis:{
+                // data:[0,30,60,90,120,150,180]
+            },
+
+            // series属性,用来给echarts图标传入数据,以及希望生成的图形类型
+            series:{
+                type:"line",
+                data:getRandomData(4)
+            }
+        }
+
+        chart.setOption(option)
+    </script>
+</body>
+</html>

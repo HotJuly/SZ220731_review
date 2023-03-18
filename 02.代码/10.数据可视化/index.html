@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #chart{
+            width:800px;
+            height:400px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chart"></div>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@4.7.0/dist/echarts.min.js"></script>
+    <script>
+        function getRandomData(num){
+            var arr = [];
+            for (let index = 0; index < num; index++) {
+                var n = Math.floor(Math.random() *100 + 50)
+                arr.push(n);
+            }
+
+            return arr;
+        }
+        var chartDOM = document.querySelector('#chart');
+
+        var chart = echarts.init(chartDOM);
+
+        var option = {
+            tooltip:{
+                show:true
+            },
+            grid:{
+                left:0
+            },
+            dataZoom:{},
+            toolbox:{
+                show:true,
+                feature:{
+                    saveAsImage:{}, 
+                    restore:{}
+                }
+            },
+            legend:{
+                data:["销量","流量","占比"]
+            },
+            xAxis:{
+                data:["第一季度","第二季度","第三季度","第四季度"]
+            },
+            yAxis:{},
+            series:[
+                {
+                    name:"销量",
+                    type:"bar",
+                    data:getRandomData(4)
+                },
+                {
+                    name:"流量",
+                    type:"line",
+                    smooth:true,
+                    data:getRandomData(4)
+                },
+                {
+                    name:"占比",
+                    type:"pie",
+                    radius:30,
+                    center:[700,70],
+                    data:[
+                        {name:"xxx",value:111},
+                        {name:"yyy",value:222},
+                        {name:"zzz",value:333}
+                    ]
+                }
+            ]
+        }
+
+        chart.setOption(option)
+    </script>
+</body>
+</html>

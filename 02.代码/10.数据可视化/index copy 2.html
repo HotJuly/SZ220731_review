@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #chart,#chart2{
+            width:800px;
+            height:400px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chart"></div>
+    <div id="chart2"></div>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@4.7.0/dist/echarts.min.js"></script>
+    <script>
+        function getRandomData(num){
+            var arr = [];
+            for (let index = 0; index < num; index++) {
+                var n = Math.floor(Math.random() *1000 + 500)
+                arr.push(n);
+            }
+
+            return arr;
+        }
+        var chartDOM = document.querySelector('#chart');
+
+        var chart = echarts.init(chartDOM);
+
+        var option = {
+            xAxis:{
+                boundaryGap:false,
+                data:["周一","周二","周三","周四","周五","周六","周日"]
+            },
+            yAxis:{},
+            series:{
+                type:"line",
+                areaStyle:{},
+                data:getRandomData(7)
+            }
+        }
+
+        chart.setOption(option)
+
+        //--------------------------------------------------
+        
+        var chartDOM2 = document.querySelector('#chart2');
+
+        var chart2 = echarts.init(chartDOM2);
+
+        var option = {
+            xAxis:{
+                axisLabel:{
+                    formatter:"{value}°C"
+                },
+            },
+            yAxis:{
+                axisLine:{
+                    onZero:false
+                },
+                axisLabel:{
+                    formatter:"{value}km"
+                },
+                boundaryGap:false,
+                data:[0,10,20,30,40,50,60,70,80]
+            },
+            series:{
+                type:"line",
+                smooth:true,
+                data:[15, -50, -56.5, -46.5, -22.1, -2.5, -27.7, -55.7, -76.5]
+            }
+        }
+
+        chart2.setOption(option)
+    </script>
+</body>
+</html>
